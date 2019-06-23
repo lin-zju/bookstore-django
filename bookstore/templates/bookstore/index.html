@@ -1,11 +1,17 @@
-{%  extends 'base.html' %}
-<div>
-    <h1> Hello world </h1>
+{#{%  extends 'base.html' %}#}
+<div id="app">
+  <div>
+    <h1>Menu</h1>
+      <a href="{% url 'bookstore:mystore' %}">My Store</a> |
+      <a href="http://www.baidu.com">Baidu</a>
+    <h1>Books</h1>
+    <ul>
+    {% for book in booklist %}
+      <li>{{ book }}</li>
 
-    <form action="{% url 'bookstore:index' %}", method="post">
-        {% csrf_token %}
-        <label for="your_name"> Your name: </label>
-        <input id="your_name" type="text" name="your_name" value="{{ current_name }}">
-        <input type="submit" value="OK">
-    </form>
+    {% endfor %}
+    </ul>
+  </div>
 </div>
+
+

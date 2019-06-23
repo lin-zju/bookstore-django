@@ -1,0 +1,5 @@
+<form action="{% url 'bookstore:edit_book' pk %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% include 'snippets/form_snippets.html' %}
+  <input type="submit" value="Save">
+</form>

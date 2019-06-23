@@ -6,7 +6,7 @@ import os
 # Logics for creating and deletion and in terms of forms
 
 def cover_upload_path(instance, filename):
-    return os.path.join('books', instance.id, filename)
+    return os.path.join('books', instance.seller.username, filename)
 
 class Book(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -18,6 +18,9 @@ class Book(models.Model):
     description = models.TextField()
     category = models.CharField(max_length=100)
     isbn = models.CharField(max_length=10)
+    
+    def __str__(self):
+        return '{}, by {}.'.format(self.title, self.author)
     
 
 class CartItem(models.Model):
