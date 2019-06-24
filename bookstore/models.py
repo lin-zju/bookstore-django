@@ -36,6 +36,9 @@ class Book(models.Model):
     def __str__(self):
         return '{}, by {}.'.format(self.title, self.author)
     
+    def get_link_to_douban(self):
+        return 'http://douban.com/isbn/{}/'.format(self.isbn)
+    
 
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -81,6 +84,9 @@ class OrderItem(models.Model):
             self.get_status_display(),
             self.get_delivery_method_display()
         )
+    
+    def is_completed(self):
+        return self.status == self.COMPLETED
     
 class WishListItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

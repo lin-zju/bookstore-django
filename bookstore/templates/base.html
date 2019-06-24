@@ -10,10 +10,12 @@
 
 {# Display a form #}
 {% if request.user.is_authenticated %}
-  Welcome, {{ request.user.username }}. |
+  Welcome, <b>{{ request.user.username }}</b>. |
+  <a href="{% url 'bookstore:profile' request.user.username %}">View My Profile</a> |
   <a href="{% url 'bookstore:logout' %}">Log out</a>
 {% else %}
-  <a href="{% url 'bookstore:login' %}">Log in</a>
+  <a href="{% url 'bookstore:login' %}">Log in</a> |
+  <a href="{% url 'bookstore:register' %}">Register</a>
 {% endif %}
 <hr/>
 <h1>Menu</h1>
@@ -21,7 +23,8 @@
 <a href="{% url 'bookstore:mystore' %}">My Store</a> |
 <a href="{% url 'bookstore:mycart' %}">Shopping Cart</a> |
 <a href="{% url 'bookstore:mywishlist' %}">My Wishlist</a> |
-<a href="{% url 'bookstore:myorders' %}">My Orders</a>
+<a href="{% url 'bookstore:myorders' %}">My Orders</a> |
+<a href="{% url 'bookstore:received_orders' %}">Received Orders</a>
 {% block content %}
 {% endblock %}
 <style>

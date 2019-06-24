@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django_registration.views import RegistrationView
+from django_registration.forms import RegistrationFormUniqueEmail
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseNotModified
 from django.shortcuts import get_object_or_404
 from .forms import *
@@ -15,8 +16,20 @@ import datetime
 
 def index(request):
     # if request.user.is_authenticated:
-    booklist = Book.objects.all()
-    return render(request, 'bookstore/index.html', {'booklist': booklist})
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            booklist = Book.objects.all()
+            words = form.cleaned_data['search_word'].split()
+            for word in words:
+                booklist = Book.objects.filter(title__icontains=word)
+            category = form.cleaned_data['category']
+            if category != SearchForm.ALL:
+                booklist = booklist.filter(category=category)
+    else:
+        form = SearchForm()
+        booklist = Book.objects.all()
+    return render(request, 'bookstore/index.html', {'booklist': booklist, 'form': form})
     # else:
     #     return redirect('bookstore:login')
     
@@ -53,6 +66,7 @@ class MyLogoutView(auth_views.LogoutView):
 class MyRegistrationView(RegistrationView):
     success_url = reverse_lazy('bookstore:login')
     template_name = 'registration/registration_form.html'
+    form_class = RegistrationFormUniqueEmail
     
     def register(self, form):
         data = form.cleaned_data
@@ -68,8 +82,11 @@ class MyRegistrationView(RegistrationView):
 def add_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
+        # form.seller = request.user
         if form.is_valid():
-            form.save()
+            book = form.save(commit=False)
+            book.seller = request.user
+            book.save()
             return redirect('bookstore:mystore')
     else:
         form = BookForm()
@@ -82,7 +99,8 @@ def edit_book(request, book_id):
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES, instance=book)
         if form.is_valid():
-            form.save()
+            form.save(commit=False)
+            book.save()
             return redirect('bookstore:edit_book', book.id)
     else:
         form = BookForm(instance=book)
@@ -190,8 +208,13 @@ def do_purchase(request, cart_id):
     
 @login_required
 def myorders(request):
-    orderlist = OrderItem.objects.filter(user=request.user)
+    orderlist = OrderItem.objects.filter(user=request.user).order_by('-status')
     return render(request, 'bookstore/myorders.html', {'orderlist': orderlist})
+
+@login_required
+def received_orders(request):
+    orderlist = OrderItem.objects.filter(book__seller=request.user).order_by('-status')
+    return render(request, 'bookstore/received_orders.html', {'orderlist': orderlist})
 
 @login_required
 def complete_order(request, order_id):
@@ -202,6 +225,14 @@ def complete_order(request, order_id):
         return redirect('bookstore:myorders')
     else:
         raise Http404('Invalid request method')
-        
-    
-    
+
+@login_required
+def profile(request, username):
+    user = get_object_or_404(User, username=username)
+    wishlist = WishListItem.objects.filter(user=user)
+    context = {
+        'username': user.username,
+        'email': user.email,
+        'wishlist': wishlist
+    }
+    return render(request, 'bookstore/profile.html', context)

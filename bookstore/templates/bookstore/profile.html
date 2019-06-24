@@ -1,0 +1,17 @@
+{#{%  extends 'base.html' %}#}
+{%  extends 'base.html' %}
+{% block content %}
+
+<h1> User Info</h1>
+<label>Username: </label> {{ username }}
+  <br/>
+<label>Email: </label> {{ email }}
+<h1>{{ username }}'s Wishlist</h1>
+<ul>
+{% for wish_item in wishlist %}
+  <li>
+    {{ wish_item }}
+  </li>
+{% endfor %}
+</ul>
+{% endblock %}

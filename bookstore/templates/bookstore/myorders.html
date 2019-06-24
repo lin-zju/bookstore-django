@@ -9,10 +9,12 @@
       <li>
         {{ order_item }}
       </li>
+      {% if not order_item.is_completed %}
       <form action="{% url 'bookstore:complete_order' order_item.id %}" method="post">
         {% csrf_token %}
         <input type="submit" value="complete">
       </form>
+      {% endif %}
     {% endfor %}
     </ul>
   </div>

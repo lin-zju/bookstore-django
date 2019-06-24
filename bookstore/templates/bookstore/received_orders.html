@@ -1,0 +1,16 @@
+{#{%  extends 'base.html' %}#}
+{%  extends 'base.html' %}
+{% block content %}
+<div id="app">
+  <div>
+    <h1>Received Orders</h1>
+    <ul>
+    {% for order_item in orderlist %}
+      <li>
+        {{ order_item }}
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

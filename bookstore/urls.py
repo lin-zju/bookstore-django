@@ -4,10 +4,12 @@ from .import views
 app_name = 'bookstore'
 urlpatterns = [
     path('', views.index, name='index'),
+    path('profile/<username>/', views.profile, name='profile'),
     path('mystore/', views.mystore, name='mystore'),
     path('mycart/', views.mycart, name='mycart'),
     path('mywishlist/', views.mywishlist, name='mywishlist'),
     path('myorders/', views.myorders, name='myorders'),
+    path('received_orders/', views.received_orders, name='received_orders'),
     path('thanks/', views.thanks, name='thanks'),
     path('login/', views.MyLoginView.as_view(), name='login'),
     path('logout/', views.MyLogoutView.as_view(), name='logout'),

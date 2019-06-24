@@ -3,6 +3,11 @@
 <div id="app">
   <div>
     <h1>Books</h1>
+    <form action="{% url 'bookstore:index' %}" method="post">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" value="Search"/>
+    </form>
     <ul>
     {% for book in booklist %}
       <li>{{ book }}</li>
@@ -14,6 +19,7 @@
         {% csrf_token %}
         <input type="submit" value="Add to wishlist">
       </form>
+      <a href="{{ book.get_link_to_douban }}" target="_blank">Link to Douban</a>
     {% endfor %}
     </ul>
   </div>
