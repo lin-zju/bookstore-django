@@ -1,0 +1,9 @@
+<h1>Register</h1>
+<form method="post" action="{% url 'bookstore:register' %}">
+{% csrf_token %}
+<table>
+  {{ form.as_table }}
+</table>
+<input type="submit" value="register">
+{#<input type="hidden" name="next" value="{{ next }}">#}
+</form>

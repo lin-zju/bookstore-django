@@ -1,21 +1,24 @@
 from django.shortcuts import render, redirect
+from django_registration.views import RegistrationView
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseNotModified
 from django.shortcuts import get_object_or_404
 from .forms import *
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django_registration.signals import user_registered
 from collections import OrderedDict
 import datetime
 
 # Create your views here.
 
 def index(request):
-    if request.user.is_authenticated:
-        booklist = Book.objects.all()
-        return render(request, 'bookstore/index.html', {'booklist': booklist})
-    else:
-        return redirect('bookstore:login')
+    # if request.user.is_authenticated:
+    booklist = Book.objects.all()
+    return render(request, 'bookstore/index.html', {'booklist': booklist})
+    # else:
+    #     return redirect('bookstore:login')
     
 @login_required
 def mystore(request):
@@ -34,7 +37,8 @@ def mywishlist(request):
     
 
 def thanks(request):
-    return HttpResponse('<h1>Thanks!</h1>')
+    return render(request, 'bookstore/thanks.html')
+    # return HttpResponse('<h1>Thanks!</h1>')
 
 class MyLoginView(auth_views.LoginView):
     # pass
@@ -42,13 +46,31 @@ class MyLoginView(auth_views.LoginView):
         'next': lambda: reverse('bookstore:index')
     }
     
+class MyLogoutView(auth_views.LogoutView):
+    next_page = reverse_lazy('bookstore:index')
+    
+    
+class MyRegistrationView(RegistrationView):
+    success_url = reverse_lazy('bookstore:login')
+    template_name = 'registration/registration_form.html'
+    
+    def register(self, form):
+        data = form.cleaned_data
+        user = User.objects.create_user(
+            username=data['username'],
+            email=data['email'],
+            password=data['password1'])
+        user_registered.send(self.__class__, user=user)
+        return user
+    
+    
 @login_required
 def add_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('bookstore:add_book')
+            return redirect('bookstore:mystore')
     else:
         form = BookForm()
         
@@ -168,7 +190,7 @@ def do_purchase(request, cart_id):
     
 @login_required
 def myorders(request):
-    orderlist = OrderItem.objects.all()
+    orderlist = OrderItem.objects.filter(user=request.user)
     return render(request, 'bookstore/myorders.html', {'orderlist': orderlist})
 
 @login_required

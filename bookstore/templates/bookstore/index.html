@@ -1,11 +1,7 @@
-{#{%  extends 'base.html' %}#}
+{%  extends 'base.html' %}
+{% block content %}
 <div id="app">
   <div>
-    <h1>Menu</h1>
-      <a href="{% url 'bookstore:mystore' %}">My Store</a> |
-      <a href="{% url 'bookstore:mycart' %}">Shopping Cart</a> |
-      <a href="{% url 'bookstore:mywishlist' %}">My Wishlist</a> |
-      <a href="{% url 'bookstore:myorders' %}">My Orders</a>
     <h1>Books</h1>
     <ul>
     {% for book in booklist %}
@@ -24,3 +20,4 @@
 </div>
 
 
+{% endblock %}

@@ -9,6 +9,28 @@
 {% bootstrap_messages %}
 
 {# Display a form #}
-<div>
-  <h1> Hello world! </h1>
-</div>
+{% if request.user.is_authenticated %}
+  Welcome, {{ request.user.username }}. |
+  <a href="{% url 'bookstore:logout' %}">Log out</a>
+{% else %}
+  <a href="{% url 'bookstore:login' %}">Log in</a>
+{% endif %}
+<hr/>
+<h1>Menu</h1>
+<a href="{% url 'bookstore:index' %}">Home</a> |
+<a href="{% url 'bookstore:mystore' %}">My Store</a> |
+<a href="{% url 'bookstore:mycart' %}">Shopping Cart</a> |
+<a href="{% url 'bookstore:mywishlist' %}">My Wishlist</a> |
+<a href="{% url 'bookstore:myorders' %}">My Orders</a>
+{% block content %}
+{% endblock %}
+<style>
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+</style>
