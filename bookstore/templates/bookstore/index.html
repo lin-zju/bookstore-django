@@ -3,12 +3,21 @@
   <div>
     <h1>Menu</h1>
       <a href="{% url 'bookstore:mystore' %}">My Store</a> |
-      <a href="http://www.baidu.com">Baidu</a>
+      <a href="{% url 'bookstore:mycart' %}">Shopping Cart</a> |
+      <a href="{% url 'bookstore:mywishlist' %}">My Wishlist</a> |
+      <a href="{% url 'bookstore:myorders' %}">My Orders</a>
     <h1>Books</h1>
     <ul>
     {% for book in booklist %}
       <li>{{ book }}</li>
-
+      <form action="{% url 'bookstore:add_to_cart' book.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Add to cart">
+      </form>
+      <form action="{% url 'bookstore:add_to_wishlist' book.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Add to wishlist">
+      </form>
     {% endfor %}
     </ul>
   </div>

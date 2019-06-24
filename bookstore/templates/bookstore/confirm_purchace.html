@@ -1,0 +1,14 @@
+<h1>Conform Your purchase </h1>
+<form action="{% url 'bookstore:do_purchase' cart_id %}" method="post">
+  {% csrf_token %}
+  {% for k, v in order_fields %}
+    {{ k }}: {{ v }} <br/>
+  {% endfor %}
+  {% for field in form %}
+    <div class="fieldWrapper">
+      {{ field.errors }}
+      {{ field.label_tag }} {{ field }}
+    </div>
+  {% endfor %}
+  <input type="submit" value="Submit">
+</form>

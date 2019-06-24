@@ -1,0 +1,19 @@
+{#{%  extends 'base.html' %}#}
+<div id="app">
+  <div>
+    <h1>My Orders</h1>
+    <ul>
+    {% for order_item in orderlist %}
+      <li>
+        {{ order_item }}
+      </li>
+      <form action="{% url 'bookstore:complete_order' order_item.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="complete">
+      </form>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+
+

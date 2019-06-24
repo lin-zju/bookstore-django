@@ -1,0 +1,23 @@
+{#{%  extends 'base.html' %}#}
+<div id="app">
+  <div>
+    <h1>My Shopping Cart</h1>
+    <ul>
+    {% for cart_item in cartlist %}
+      <li>
+        {{ cart_item }}
+        <form action="{% url 'bookstore:remove_from_cart' cart_item.id %}" method="post">
+          {% csrf_token %}
+          <input type="submit" value="Delete">
+        </form>
+        <form action="{% url 'bookstore:confirm_purchase' cart_item.id %}" method="get">
+          {% csrf_token %}
+          <input type="submit" value="Purchase">
+        </form>
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+</div>
+
+

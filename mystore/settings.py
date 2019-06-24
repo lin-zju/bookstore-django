@@ -128,3 +128,4 @@ MEDIA_URL = '/media/'
 
 # Authentication
 LOGIN_REDIRECT_URL = '/bookstore/'
+LOGIN_URL = 'bookstore:login'
