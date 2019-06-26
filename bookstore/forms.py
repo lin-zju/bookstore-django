@@ -33,7 +33,7 @@ class WishListItemForm(ModelForm):
 class SearchForm(forms.Form):
     ALL = 'ALL'
     CATEGORY_CHOICES = [(ALL, 'all')] + Book.CATEGORY_CHOICES
-    search_word = forms.CharField(max_length=100, required=False)
+    keywords = forms.CharField(max_length=100, required=False)
     category = forms.ChoiceField(choices=CATEGORY_CHOICES)
     
         

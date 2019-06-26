@@ -1,17 +1,74 @@
 {#{%  extends 'base.html' %}#}
 {%  extends 'base.html' %}
+{% load bootstrap3 %}
 {% block content %}
 
 <h1> User Info</h1>
-<label>Username: </label> {{ username }}
-  <br/>
-<label>Email: </label> {{ email }}
-<h1>{{ username }}'s Wishlist</h1>
-<ul>
-{% for wish_item in wishlist %}
-  <li>
-    {{ wish_item }}
-  </li>
-{% endfor %}
-</ul>
+  <ul class="list-group">
+
+    <li class="list-group-item">
+      <label>Username: </label> {{ username }}
+    </li>
+    <li class="list-group-item">
+      <label>Email: </label> {{ email }}
+    </li>
+    <li class="list-group-item">
+      <a href="{% url 'bookstore:user_store' username %}">View <strong>{{ username }}</strong>'s store</a>
+    </li>
+    <li class="list-group-item">
+      <a href="{% url 'bookstore:user_wishlist' username %}">View <strong>{{ username }}</strong>'s wishlist</a>
+    </li>
+  </ul>
+{#<h1>{{ username }}'s wishlist</h1>#}
+{#<ul>#}
+{#{% for item in wishlist %}#}
+{#  <ol class="list-group">#}
+{#    <li class="list-group-item">#}
+{#      <div class="media">#}
+{#        <div class="media-left media-middle">#}
+{#          <img src="{{ item.book.cover_image.url }}" class="media-object" style="width:200px">#}
+{#          <br/>#}
+{#        </div>#}
+{#        <div class="media-body">#}
+{#          <h3 class="media-heading">{{ item.book.title }}</h3>#}
+{#          <p>by <strong>{{ item.book.author }}</strong></p>#}
+{#          <div class="container-fluid">#}
+{#            <div class="row">#}
+{#              <div class="col-sm-6">#}
+{#                <ol class="list-group">#}
+{#                  <li class="list-group-item"><label>Price: </label>: &yen {{ item.book.price }}</li>#}
+{#                  <li class="list-group-item"><label>Original: </label> &yen  {{ item.book.orig_price }}</li>#}
+{#                  <li class="list-group-item"><label>Cateogry:</label> {{ item.book.get_category_display }}</li>#}
+{#                  <li class="list-group-item"><label>Seller:</label> {{ item.book.seller.username }}</li>#}
+{#                  <li class="list-group-item"><label>ISBN:</label>#}
+{#                    {{ book.isbn }}#}
+{#                    <a class="btn btn-info" href="{{ item.book.get_link_to_douban }}" target="_blank">Link to Douban</a>#}
+{#                  </li>#}
+{#                  <li class="list-group-item"><label>Description:</label> {{ item.book.description }}</li>#}
+{#                </ol>#}
+{#              </div>#}
+{#              <div class="col-sm-6">#}
+{#                <ol class="list-group">#}
+                  {#                      <li class="list-group-item">#}
+                  {#                        <form action="{% url 'bookstore:confirm_purchase' item.id %}" method="get">#}
+                  {#                          {% csrf_token %}#}
+                  {#                          <button class="btn btn-primary" style="width:100%">Purchase</button>#}
+                  {#                        </form>#}
+                  {#                      </li>#}
+{#                  <li class="list-group-item">#}
+{#                    <a class="btn btn-info" style="width:100%" href="{% url 'bookstore:profile' item.book.seller.username %}">View seller profile</a>#}
+{#                  </li>#}
+{#                  <li class="list-group-item">#}
+{#                    <a class="btn btn-info" style="width:100%" href="{% url 'bookstore:dialogs_detail' item.book.seller.username %}">Contact seller</a>#}
+{#                  </li>#}
+{#                </ol>#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+{#    </li>#}
+{#  </ol>#}
+{#{% endfor %}#}
+{#</ul>#}
 {% endblock %}

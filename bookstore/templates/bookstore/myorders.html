@@ -6,15 +6,74 @@
     <h1>My Orders</h1>
     <ul>
     {% for order_item in orderlist %}
-      <li>
-        {{ order_item }}
-      </li>
-      {% if not order_item.is_completed %}
-      <form action="{% url 'bookstore:complete_order' order_item.id %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="complete">
-      </form>
-      {% endif %}
+
+      <ol class="list-group">
+        <li class="list-group-item">
+          <div class="media">
+            <div class="media-left media-middle">
+              <img src="{{ order_item.book.cover_image.url }}" class="media-object" style="width:200px">
+              <br/>
+            </div>
+            <div class="media-body">
+              <h3 class="media-heading">{{ order_item.book.title }}</h3>
+              <p>by <strong>{{ order_item.book.author }}</strong></p>
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <ol class="list-group">
+                      <li class="list-group-item"><label>Price: </label>: &yen {{ order_item.book.price }}</li>
+                      <li class="list-group-item"><label>Original: </label> &yen  {{ order_item.book.orig_price }}</li>
+                      <li class="list-group-item"><label>Cateogry:</label> {{ order_item.book.get_category_display }}</li>
+                      <li class="list-group-item"><label>Seller:</label> {{ order_item.book.seller.username }}</li>
+                      <li class="list-group-item"><label>ISBN:</label>
+                        {{ book.isbn }}
+                        <a class="btn btn-info" href="{{ order_item.book.get_link_to_douban }}" target="_blank">Link to Douban</a>
+                      </li>
+                      <li class="list-group-item"><label>Description:</label> {{ order_item.book.description }}</li>
+                    </ol>
+                  </div>
+                  <div class="col-sm-6">
+                    <ol class="list-group">
+                      <li class="list-group-item">
+                        <label>Quantity: </label> {{ order_item.quantity }}
+                      </li>
+                      <li class="list-group-item">
+                        <label>Date added: </label> {{ order_item.date_added }}
+                      </li>
+                      <li class="list-group-item">
+                        <label>Delivery method: </label> {{ order_item.get_delivery_method_display }}
+                      </li>
+                      <li class="list-group-item">
+                        <label>Status: </label> {{ order_item.get_status_display }}
+                      </li>
+{#                      <li class="list-group-item">#}
+{#                        <form action="{% url 'bookstore:remove_from_cart' order_item.id %}" method="post">#}
+{#                          {% csrf_token %}#}
+{#                          <button class="btn btn-danger" style="width:100%">Remove</button>#}
+{#                        </form>#}
+{#                      </li>#}
+                      <li class="list-group-item">
+                        <a class="btn btn-info" style="width:100%" href="{% url 'bookstore:profile' order_item.book.seller.username %}">View seller profile</a>
+                      </li>
+                      <li class="list-group-item">
+                        <a class="btn btn-info" style="width:100%" href="{% url 'bookstore:dialogs_detail' order_item.book.seller.username %}">Contact seller</a>
+                      </li>
+                      {% if not order_item.is_completed %}
+                        <li class="list-group-item">
+                          <form action="{% url 'bookstore:complete_order' order_item.id %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-primary" style="width:100%">Complete</button>
+                          </form>
+                        </li>
+                      {% endif %}
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ol>
     {% endfor %}
     </ul>
   </div>

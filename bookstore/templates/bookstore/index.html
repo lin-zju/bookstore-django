@@ -1,29 +1,72 @@
 {%  extends 'base.html' %}
+{% load bootstrap3 %}
 {% block content %}
-<div id="app">
-  <div>
-    <h1>Books</h1>
-    <form action="{% url 'bookstore:index' %}" method="post">
-      {% csrf_token %}
-      {{ form }}
-      <input type="submit" value="Search"/>
-    </form>
+    <h1>All Books</h1>
+    <div class="panel">
+      <form action="{% url 'bookstore:index' %}" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% bootstrap_button "Search" button_type="submit" button_class="btn-primary" %}
+      </form>
+    </div>
     <ul>
     {% for book in booklist %}
-      <li>{{ book }}</li>
-      <form action="{% url 'bookstore:add_to_cart' book.id %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="Add to cart">
-      </form>
-      <form action="{% url 'bookstore:add_to_wishlist' book.id %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="Add to wishlist">
-      </form>
-      <a href="{{ book.get_link_to_douban }}" target="_blank">Link to Douban</a>
+      <ol class="list-group">
+        <li class="list-group-item">
+          <div class="media">
+            <div class="media-left media-middle">
+              <img src="{{ book.cover_image.url }}" class="media-object" style="width:200px">
+              <br/>
+            </div>
+            <div class="media-body">
+              <h3 class="media-heading">{{ book.title }}</h3>
+              <p>by <strong>{{ book.author }}</strong></p>
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <ol class="list-group">
+                      <li class="list-group-item"><label>Price: </label>: &yen {{ book.price }}</li>
+                      <li class="list-group-item"><label>Original: </label> &yen  {{ book.orig_price }}</li>
+                      <li class="list-group-item"><label>Cateogry:</label> {{ book.get_category_display }}</li>
+                      <li class="list-group-item"><label>Seller:</label> {{ book.seller.username }}</li>
+                      <li class="list-group-item"><label>ISBN:</label>
+                        {{ book.isbn }}
+                        <a class="btn btn-info" href="{{ book.get_link_to_douban }}" target="_blank">Link to Douban</a>
+                      </li>
+                      <li class="list-group-item"><label>Description:</label> {{ book.description }}</li>
+                    </ol>
+                  </div>
+                  <div class="col-sm-6">
+                    <ol class="list-group">
+                      <li class="list-group-item">
+                        <a class="btn btn-info" style="width:100%" href="{% url 'bookstore:profile' book.seller.username %}">View seller profile</a>
+                      </li>
+                      <li class="list-group-item">
+                        <a class="btn btn-info" style="width:100%" href="{% url 'bookstore:dialogs_detail' book.seller.username %}">Contact seller</a>
+                      </li>
+                      <li class="list-group-item">
+                        <form class="form-inline" action="{% url 'bookstore:add_to_cart' book.id %}" method="post">
+                          {% csrf_token %}
+                          <button class="btn btn-primary" style="width:100%" type="submit">Add to cart </button>
+                        </form>
+                      </li>
+                      <li class="list-group-item">
+                        <form class="form-inline" action="{% url 'bookstore:add_to_wishlist' book.id %}" method="post">
+                          {% csrf_token %}
+                          <button class="btn btn-primary" style="width:100%" type="submit">Add to wishlist </button>
+                        </form>
+
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ol>
     {% endfor %}
     </ul>
-  </div>
-</div>
 
 
 {% endblock %}

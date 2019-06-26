@@ -1,23 +1,82 @@
 {%  extends 'base.html' %}
+{% load bootstrap3 %}
 {% block content %}
 <div id="app">
   <div>
-    <h1>My Shopping Cart</h1>
+  <h1>My Shopping Cart</h1>
     <ul>
     {% for cart_item in cartlist %}
-      <li>
-        {{ cart_item }}
-        <form action="{% url 'bookstore:remove_from_cart' cart_item.id %}" method="post">
-          {% csrf_token %}
-          <input type="submit" value="Delete">
-        </form>
-        <form action="{% url 'bookstore:confirm_purchase' cart_item.id %}" method="get">
-          {% csrf_token %}
-          <input type="submit" value="Purchase">
-        </form>
-      </li>
+      <ol  class="list-group">
+        <li class="list-group-item">
+          <div class="media">
+            <div class="media-left media-middle">
+              <img src="{{ cart_item.book.cover_image.url }}" class="media-object" style="width:200px">
+              <br/>
+            </div>
+            <div class="media-body">
+              <h3 class="media-heading">{{ cart_item.book.title }}</h3>
+              <p>by <strong>{{ cart_item.book.author }}</strong></p>
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <ol class="list-group">
+                      <li class="list-group-item"><label>Price: </label>: &yen {{ cart_item.book.price }}</li>
+                      <li class="list-group-item"><label>Original: </label> &yen  {{ cart_item.book.orig_price }}</li>
+                      <li class="list-group-item"><label>Cateogry:</label> {{ cart_item.book.get_category_display }}</li>
+                      <li class="list-group-item"><label>Seller:</label> {{ cart_item.book.seller.username }}</li>
+                      <li class="list-group-item"><label>ISBN:</label>
+                        {{ book.isbn }}
+                        <a class="btn btn-info" href="{{ cart_item.book.get_link_to_douban }}" target="_blank">Link to Douban</a>
+                      </li>
+                      <li class="list-group-item"><label>Description:</label> {{ cart_item.book.description }}</li>
+                    </ol>
+                  </div>
+                  <div class="col-sm-6">
+                    <ol class="list-group">
+                      <li class="list-group-item">
+                        <label>Quantity:</label>
+                        <form action="{% url 'bookstore:increase_quantity' cart_item.id %}" style="display:inline" method="post">
+                          {% csrf_token %}
+                          <button class="btn btn-default" type="submit">+</button>
+                        </form>
+                        {{ cart_item.quantity }}
+                        <form action="{% url 'bookstore:decrease_quantity' cart_item.id %}" style="display:inline" method="post">
+                          {% csrf_token %}
+                          <button class="btn btn-default" type="submit">-</button>
+                        </form>
+                      </li>
+                      <li class="list-group-item">
+                        <label>Date added: </label> {{ cart_item.date_added }}
+                      </li>
+                      <li class="list-group-item">
+                        <a class="btn btn-info" style="width:100%" href="{% url 'bookstore:profile' cart_item.book.seller.username %}">View seller profile</a>
+                      </li>
+                      <li class="list-group-item">
+                        <a class="btn btn-info" style="width:100%" href="{% url 'bookstore:dialogs_detail' cart_item.book.seller.username %}">Contact seller</a>
+                      </li>
+                      <li class="list-group-item">
+                        <form action="{% url 'bookstore:confirm_purchase' cart_item.id %}" method="get">
+                          {% csrf_token %}
+                          <button class="btn btn-primary" style="width:100%">Purchase</button>
+                        </form>
+                      </li>
+                      <li class="list-group-item">
+                        <form action="{% url 'bookstore:remove_from_cart' cart_item.id %}" method="post">
+                          {% csrf_token %}
+                          <button class="btn btn-danger" style="width:100%">Remove</button>
+                        </form>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ol>
     {% endfor %}
     </ul>
   </div>
+  <label id="bottom">Bottom </label>
 </div>
 {% endblock %}

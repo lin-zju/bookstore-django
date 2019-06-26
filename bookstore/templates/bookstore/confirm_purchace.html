@@ -1,17 +1,21 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
 {% block content %}
-<h1>Conform Your purchase </h1>
+<h1>Confirm Your purchase </h1>
+{#<h1>Choose your delivery method </h1>#}
 <form action="{% url 'bookstore:do_purchase' cart_id %}" method="post">
   {% csrf_token %}
   {% for k, v in order_fields %}
-    {{ k }}: {{ v }} <br/>
+{#    {{ k }}: {{ v }} <br/>#}
+    {% bootstrap_label k %}:  {{ v }}  <br/>
   {% endfor %}
-  {% for field in form %}
-    <div class="fieldWrapper">
-      {{ field.errors }}
-      {{ field.label_tag }} {{ field }}
-    </div>
-  {% endfor %}
-  <input type="submit" value="Submit">
+  {% bootstrap_form form %}
+{#  {% for field in form %}#}
+{#    <div class="fieldWrapper">#}
+{#      {{ field.errors }}#}
+{#      {{ field.label_tag }} {{ field }}#}
+{#    </div>#}
+{#  {% endfor %}#}
+  <button class="btn btn-primary"  type="submit">Submit </button>
 </form>
 {% endblock %}

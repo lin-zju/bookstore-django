@@ -1,39 +1,69 @@
 {# Load the tag library #}
+{% extends 'bootstrap3/bootstrap3.html' %}
 {% load bootstrap3 %}
+{% load static %}
 
-{# Load CSS and JavaScript #}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
 
-{# Display django.contrib.messages as Bootstrap alerts #}
-{% bootstrap_messages %}
-
-{# Display a form #}
-{% if request.user.is_authenticated %}
-  Welcome, <b>{{ request.user.username }}</b>. |
-  <a href="{% url 'bookstore:profile' request.user.username %}">View My Profile</a> |
-  <a href="{% url 'bookstore:logout' %}">Log out</a>
-{% else %}
-  <a href="{% url 'bookstore:login' %}">Log in</a> |
-  <a href="{% url 'bookstore:register' %}">Register</a>
-{% endif %}
-<hr/>
-<h1>Menu</h1>
-<a href="{% url 'bookstore:index' %}">Home</a> |
-<a href="{% url 'bookstore:mystore' %}">My Store</a> |
-<a href="{% url 'bookstore:mycart' %}">Shopping Cart</a> |
-<a href="{% url 'bookstore:mywishlist' %}">My Wishlist</a> |
-<a href="{% url 'bookstore:myorders' %}">My Orders</a> |
-<a href="{% url 'bookstore:received_orders' %}">Received Orders</a>
-{% block content %}
+{#<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">#}
+{#</script>#}
+{% block bootstrap3_title %}
+  Welcome to my bookstore!
 {% endblock %}
-<style>
-hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
-    padding: 0;
-}
-</style>
+
+{% block bootstrap3_extra_head %}
+  {% block css %}
+  {% endblock css %}
+{% endblock%}
+
+
+{% block bootstrap3_content %}
+
+  <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">ZJU Bookstore</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="{% url 'bookstore:index' %}">Home</a> </li>
+      {% if request.user.is_authenticated %}
+        <li><a href="{% url 'bookstore:mystore' %}">My Store</a> </li>
+        <li><a href="{% url 'bookstore:mycart' %}">Cart</a></li>
+        <li><a href="{% url 'bookstore:mywishlist' %}">Wishlist</a></li>
+        <li><a href="{% url 'bookstore:myorders' %}">Orders</a></li>
+        <li><a href="{% url 'bookstore:received_orders' %}">Received Orders</a></li>
+        <li><a href="{% url 'bookstore:dialogs_detail' request.user.username%}">Messages</a></li>
+      {% endif %}
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      {% if request.user.is_authenticated %}
+        <li>
+          <a href="{%  url 'bookstore:profile' request.user.username %}">
+            <span class="glyphicon glyphicon-user"></span>
+            {{ request.user.username }}
+          </a>
+        </li>
+        <li>
+          <a href={% url 'bookstore:logout' %}>
+            <span class="glyphicon glyphicon-log-out"></span> Logout
+          </a>
+        </li>
+      {% else %}
+        <li><a href="{% url 'bookstore:register' %}"><span class="glyphicon glyphicon-user"></span> Sign up</a></li>
+        <li><a href="{% url 'bookstore:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+{#        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>#}
+{#        <a href="{% url 'bookstore:login' %}">Log in</a> |#}
+      {% endif %}
+    </ul>
+  </div>
+  </nav>
+
+<div class="container">
+  {% block content %}{% endblock %}
+</div>
+{% endblock %}
+
+{% block bootstrap3_extra_script %}
+  {% block extra_js %}
+  {% endblock %}
+{% endblock %}
+

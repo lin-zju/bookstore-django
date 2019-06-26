@@ -1,9 +1,17 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% block menu %}
+{% endblock %}
+{% block content %}
 <h1>Register</h1>
 <form method="post" action="{% url 'bookstore:register' %}">
 {% csrf_token %}
 <table>
-  {{ form.as_table }}
+{#  {{ form.as_table }}#}
+  {% bootstrap_form form %}
 </table>
-<input type="submit" value="register">
+{#<input type="submit" value="register">#}
+  {% bootstrap_button "Sign up" button_type="submit" button_class="btn-primary" %}
 {#<input type="hidden" name="next" value="{{ next }}">#}
 </form>
+{% endblock %}

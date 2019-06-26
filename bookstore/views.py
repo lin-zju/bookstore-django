@@ -9,6 +9,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django_registration.signals import user_registered
+import django
 from collections import OrderedDict
 import datetime
 
@@ -20,7 +21,7 @@ def index(request):
         form = SearchForm(request.POST)
         if form.is_valid():
             booklist = Book.objects.all()
-            words = form.cleaned_data['search_word'].split()
+            words = form.cleaned_data['keywords'].split()
             for word in words:
                 booklist = Book.objects.filter(title__icontains=word)
             category = form.cleaned_data['category']
@@ -37,6 +38,11 @@ def index(request):
 def mystore(request):
     booklist = Book.objects.filter(seller=request.user)
     return render(request, 'bookstore/mystore.html', {'booklist': booklist})
+
+@login_required
+def user_store(request, username):
+    booklist = Book.objects.filter(seller__username=username)
+    return render(request, 'bookstore/user_store.html', {'booklist': booklist, 'username': username})
     
 @login_required
 def mycart(request):
@@ -47,7 +53,11 @@ def mycart(request):
 def mywishlist(request):
     wishlist = WishListItem.objects.filter(user=request.user)
     return render(request, 'bookstore/mywishlist.html', {'wishlist': wishlist})
-    
+
+@login_required
+def user_wishlist(request, username):
+    wishlist = WishListItem.objects.filter(user__username=username)
+    return render(request, 'bookstore/user_wishlist.html', {'wishlist': wishlist, 'username': username})
 
 def thanks(request):
     return render(request, 'bookstore/thanks.html')
@@ -101,7 +111,7 @@ def edit_book(request, book_id):
         if form.is_valid():
             form.save(commit=False)
             book.save()
-            return redirect('bookstore:edit_book', book.id)
+            return redirect('bookstore:mystore')
     else:
         form = BookForm(instance=book)
     
@@ -109,6 +119,39 @@ def edit_book(request, book_id):
         request,
         'bookstore/edit_book.html',
         {'form': form, 'pk': book.pk})
+
+@login_required
+def remove_book(request, book_id):
+    if request.method == 'POST':
+        books = Book.objects.filter(pk=book_id)
+        books.delete()
+        return redirect('bookstore:mystore')
+    else:
+        raise Http404('Invalid query method')
+    
+@login_required
+def increase_quantity(request, cart_id):
+    if request.method == 'POST':
+        cart_item = get_object_or_404(CartItem, pk=cart_id)
+        # if cart_item.quantity + amount < 0:
+        #     cart_item.quantity = 0
+        # else:
+        cart_item.quantity += 1
+        cart_item.save()
+        return redirect('bookstore:mycart')
+    else:
+        raise Http404('Invalid query method')
+
+@login_required
+def decrease_quantity(request, cart_id):
+    if request.method == 'POST':
+        cart_item = get_object_or_404(CartItem, pk=cart_id)
+        if cart_item.quantity  > 0:
+            cart_item.quantity -= 1
+            cart_item.save()
+        return redirect('bookstore:mycart')
+    else:
+        raise Http404('Invalid query method')
 
 @login_required
 def add_to_cart(request, book_id):
@@ -208,12 +251,12 @@ def do_purchase(request, cart_id):
     
 @login_required
 def myorders(request):
-    orderlist = OrderItem.objects.filter(user=request.user).order_by('-status')
+    orderlist = OrderItem.objects.filter(user=request.user).order_by('date_added')
     return render(request, 'bookstore/myorders.html', {'orderlist': orderlist})
 
 @login_required
 def received_orders(request):
-    orderlist = OrderItem.objects.filter(book__seller=request.user).order_by('-status')
+    orderlist = OrderItem.objects.filter(book__seller=request.user).order_by('date_added')
     return render(request, 'bookstore/received_orders.html', {'orderlist': orderlist})
 
 @login_required
@@ -236,3 +279,10 @@ def profile(request, username):
         'wishlist': wishlist
     }
     return render(request, 'bookstore/profile.html', context)
+
+def test(request):
+    class TestForm(forms.Form):
+        name = forms.CharField(max_length=100)
+        hello = forms.CharField(max_length=100)
+    form = TestForm()
+    return render(request, 'bookstore/test.html', {'form': form})

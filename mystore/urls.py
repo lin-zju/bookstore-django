@@ -16,9 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, reverse_lazy
 from django.views.generic.base import RedirectView
+from django.conf.urls.static import static
+from django_private_chat import urls as django_private_chat_urls
+from django.conf import settings
 
 urlpatterns = [
     path('', RedirectView.as_view(url=reverse_lazy('bookstore:index')), name='index'),
     path('admin/', admin.site.urls),
-    path('bookstore/', include('bookstore.urls'))
-]
+    path('bookstore/', include('bookstore.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

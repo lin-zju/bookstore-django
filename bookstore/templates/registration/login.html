@@ -1,18 +1,12 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% block menu %}
+{% endblock %}
+{% block content %}
 <h1>Login</h1>
 <form method="post" action="{% url 'bookstore:login' %}">
 {% csrf_token %}
-<table>
-  {{ form.as_table }}
-{#<tr>#}
-{#    <td>{{ form.username.label_tag }}</td>#}
-{#    <td>{{ form.username }}</td>#}
-{#</tr>#}
-{#<tr>#}
-{#    <td>{{ form.password.label_tag }}</td>#}
-{#    <td>{{ form.password }}</td>#}
-{#</tr>#}
-</table>
-
-<input type="submit" value="login">
-{#<input type="hidden" name="next" value="{{ next }}">#}
+  {% bootstrap_form form %}
+  {% bootstrap_button "Login" button_type="submit" button_class="btn-primary" %}
 </form>
+{% endblock %}

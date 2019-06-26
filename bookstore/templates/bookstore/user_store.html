@@ -2,10 +2,7 @@
 {% block content %}
 <div id="app">
   <div>
-    <h1>My Store</h1>
-    <div class="well">
-        <a class="btn btn-primary" style="width:100%" href="{% url 'bookstore:add_book' %}">Add new book</a>
-    </div>
+    <h1> <strong>{{ username|capfirst }}</strong>'s Bookstore</h1>
     <ul>
     {% for book in booklist %}
       <ol class="list-group">
@@ -36,15 +33,21 @@
                   <div class="col-sm-6">
                     <ol class="list-group">
                       <li class="list-group-item">
-                        <form action="{% url 'bookstore:edit_book' book.id %}" method="get">
+                        <a class="btn btn-info" style="width:100%" href="{% url 'bookstore:profile' book.seller.username %}">View seller profile</a>
+                      </li>
+                      <li class="list-group-item">
+                        <a class="btn btn-info" style="width:100%" href="{% url 'bookstore:dialogs_detail' book.seller.username %}">Contact seller</a>
+                      </li>
+                      <li class="list-group-item">
+                        <form class="form-inline" action="{% url 'bookstore:add_to_cart' book.id %}" method="post">
                           {% csrf_token %}
-                          <button class="btn btn-primary" style="width:100%" type="submit">Edit </button>
+                          <button class="btn btn-primary" style="width:100%" type="submit">Add to cart </button>
                         </form>
                       </li>
                       <li class="list-group-item">
-                        <form action="{% url 'bookstore:remove_book' book.id %}" method="post">
+                        <form class="form-inline" action="{% url 'bookstore:add_to_wishlist' book.id %}" method="post">
                           {% csrf_token %}
-                          <button class="btn btn-danger" style="width:100%" type="submit">Remove</button>
+                          <button class="btn btn-primary" style="width:100%" type="submit">Add to wishlist </button>
                         </form>
                       </li>
                     </ol>
