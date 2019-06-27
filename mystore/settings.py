@@ -25,7 +25,7 @@ SECRET_KEY = '!s3joasb+d4#zf*$0#^!6g0n=c9z93ouq4z031ptst9tc!x1c$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -144,6 +144,7 @@ BOOTSTRAP3 = {
     # - a string, e.g. "//code.jquery.com/jquery.min.js"
     # - a dict like the default value below (use key "url" for the actual link)
     "css_url": {
+        # "url": "https://stackpath.bootstrapcdn.com/bootswatch/3.3.7/lux/bootstrap.min.css",
         "url": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
         "integrity": "sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u",
         "crossorigin": "anonymous",

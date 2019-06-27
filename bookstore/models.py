@@ -31,7 +31,7 @@ class Book(models.Model):
     description = models.TextField(default='no description')
     
     category = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
-    isbn = models.CharField(max_length=10)
+    isbn = models.CharField(max_length=13)
     
     def __str__(self):
         return '{}, by {}.'.format(self.title, self.author)

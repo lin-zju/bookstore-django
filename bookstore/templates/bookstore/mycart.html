@@ -8,7 +8,7 @@
     {% for cart_item in cartlist %}
       <ol  class="list-group">
         <li class="list-group-item">
-          <div class="media">
+          <div class="media" style="overflow-x: auto">
             <div class="media-left media-middle">
               <img src="{{ cart_item.book.cover_image.url }}" class="media-object" style="width:200px">
               <br/>
@@ -66,7 +66,7 @@
                           <button class="btn btn-danger" style="width:100%">Remove</button>
                         </form>
                       </li>
-                    </ol>
+                    </ol
                   </div>
                 </div>
               </div>
@@ -77,6 +77,5 @@
     {% endfor %}
     </ul>
   </div>
-  <label id="bottom">Bottom </label>
 </div>
 {% endblock %}

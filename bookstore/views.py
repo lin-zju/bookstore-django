@@ -146,7 +146,7 @@ def increase_quantity(request, cart_id):
 def decrease_quantity(request, cart_id):
     if request.method == 'POST':
         cart_item = get_object_or_404(CartItem, pk=cart_id)
-        if cart_item.quantity  > 0:
+        if cart_item.quantity  > 1:
             cart_item.quantity -= 1
             cart_item.save()
         return redirect('bookstore:mycart')
@@ -217,8 +217,6 @@ def confirm_purchase(request, cart_id):
         ('Book title', cart_item.book.title),
         ('Quantity', cart_item.quantity),
     ]
-    
-    # order = OrderItem.objects.create(**order_fields)
     
     form = OrderItemForm()
     
